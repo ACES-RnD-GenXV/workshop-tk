@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"name": "tk-workshop-sensor",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
