@@ -15,11 +15,11 @@ BLEService *pService;
 BLECharacteristic *pCharacteristicA;
 BLECharacteristic *pCharacteristicB;
 
-const int trigPin1 = 23;           // Trigger pin for sensor 1
-const int echoPin1 = 22;           // Echo pin for sensor 1
-const int trigPin2 = 19;           // Trigger pin for sensor 2
-const int echoPin2 = 18;           // Echo pin for sensor 2
-const int detectionThreshold = 15; // Distance threshold for HIGH state (in cm)
+const int trigPin1 = 23; // Trigger pin for sensor 1
+const int echoPin1 = 22; // Echo pin for sensor 1
+const int trigPin2 = 19; // Trigger pin for sensor 2
+const int echoPin2 = 18; // Echo pin for sensor 2
+// const int detectionThreshold = 15; // Distance threshold for HIGH state (in cm)
 
 // Function to read ultrasonic sensor and return true if object detected
 int readSensor(int trigPin, int echoPin)
@@ -43,6 +43,20 @@ int readSensor(int trigPin, int echoPin)
   return (distance);
 }
 
+class MyServerCallbacks : public BLEServerCallbacks
+{
+  void onConnect(BLEServer *pServer)
+  {
+    Serial.println("Client connected");
+  }
+
+  void onDisconnect(BLEServer *pServer)
+  {
+    Serial.println("Client disconnected");
+    BLEDevice::startAdvertising();
+  }
+};
+
 void setup()
 {
   // Initialize serial for debugging
@@ -57,6 +71,7 @@ void setup()
   // Initialize BLE
   BLEDevice::init("ESP32_WS_Input"); // Name of the device
   pServer = BLEDevice::createServer();
+  pServer->setCallbacks(new MyServerCallbacks());
   pService = pServer->createService(SERVICE_UUID);
 
   pCharacteristicA = pService->createCharacteristic(
@@ -116,10 +131,10 @@ void loop()
   Serial.println(sensorValueB);
 
   // Send sensor values as strings (or binary if preferred)
-  pCharacteristicA->setValue(String(sensorValueA).c_str());
+  pCharacteristicA->setValue(sensorValueA);
   pCharacteristicA->notify();
 
-  pCharacteristicB->setValue(String(sensorValueB).c_str());
+  pCharacteristicB->setValue(sensorValueB);
   pCharacteristicB->notify();
 
   delay(1000); // 1 second update interval
