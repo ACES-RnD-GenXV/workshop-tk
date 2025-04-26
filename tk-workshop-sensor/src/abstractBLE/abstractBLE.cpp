@@ -1,9 +1,16 @@
 #include "abstractBLE.hpp"
+#include "sensorLogic\sensorLogic.hpp"
 
-BLEServer *pServer;
-BLEService *pService;
-BLECharacteristic *pCharacteristic;
-BLEAdvertising *pAdvertising;
+#ifdef SENSORLOGIC_HPP
+#define addDes pCharacteristic->addDescriptor(new BLE2902())
+#else
+#define addDes
+#endif
+
+BLEServer *defServer;
+BLEService *defService;
+BLECharacteristic *defCharacteristic;
+BLEAdvertising *defAdvertising;
 
 void MyCallbacks::onWrite(BLECharacteristic *pCharacteristic)
 {
@@ -21,7 +28,7 @@ void MyServerCallbacks::onDisconnect(BLEServer *pServer)
     BLEDevice::startAdvertising();
 }
 
-void initializeServerBLE(const char *deviceName)
+void initializeServerBLE(const char *deviceName, BLEServer *pServer)
 {
     // Serial.println("hi");
     BLEDevice::init(deviceName);
@@ -30,24 +37,25 @@ void initializeServerBLE(const char *deviceName)
     // Serial.println("hi");
 }
 
-void initializeService(const char *serviceUUID)
+void initializeService(const char *serviceUUID, BLEService *pService, BLEServer *pServer)
 {
     // Serial.println("service");
     pService = pServer->createService(serviceUUID);
     // Serial.println("service");
 };
 
-void initializeCharacteristic(const char *characteristicUUID)
+void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *pCharacteristic, BLEService *pService)
 {
     // Serial.println("char");
     pCharacteristic =
         pService->createCharacteristic(characteristicUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
     pCharacteristic->setCallbacks(new MyCallbacks());
+    addDes;
     pService->start();
     // Serial.println("char");
 };
 
-void advertiseBLE(const char *serviceUUID)
+void advertiseBLE(const char *serviceUUID, BLEAdvertising *pAdvertising)
 {
     // Serial.println("advertise");
     pAdvertising = BLEDevice::getAdvertising();

@@ -1,18 +1,21 @@
 #ifndef ABSTRACTBLE_HPP
 #define ABSTRACTBLE_HPP
 
-#define SERVICE_UUID "4869e6e5-dec6-4a9d-a0a4-eda6b5448b97"
-#define CHARACTERISTIC_UUID "05c4d03a-ac78-4627-8778-f23fab166ba8"
-
 #include <Arduino.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
+#include <BLE2902.h>
 
-void initializeServerBLE(const char *deviceName);
-void initializeService(const char *serviceUUID);
-void initializeCharacteristic(const char *characteristicUUID);
-void advertiseBLE(const char *serviceUUID);
+extern BLEServer *defServer;
+extern BLEService *defService;
+extern BLECharacteristic *defCharacteristic;
+extern BLEAdvertising *defAdvertising;
+
+void initializeServerBLE(const char *deviceName, BLEServer *pServer = defServer);
+void initializeService(const char *serviceUUID, BLEService *pService = defService, BLEServer *pServer = defServer);
+void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *pCharacteristic = defCharacteristic, BLEService *pService = defService);
+void advertiseBLE(const char *serviceUUID, BLEAdvertising *pAdvertising = defAdvertising);
 
 class MyCallbacks : public BLECharacteristicCallbacks
 {
