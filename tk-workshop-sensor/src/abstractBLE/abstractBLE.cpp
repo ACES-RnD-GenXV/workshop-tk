@@ -1,16 +1,7 @@
 #include "abstractBLE.hpp"
 #include "sensorLogic\sensorLogic.hpp"
 
-#ifdef SENSORLOGIC_HPP
 #define addDes pCharacteristic->addDescriptor(new BLE2902())
-#else
-#define addDes
-#endif
-
-BLEServer *defServer;
-BLEService *defService;
-BLECharacteristic *defCharacteristic;
-BLEAdvertising *defAdvertising;
 
 void MyCallbacks::onWrite(BLECharacteristic *pCharacteristic)
 {
@@ -28,41 +19,41 @@ void MyServerCallbacks::onDisconnect(BLEServer *pServer)
     BLEDevice::startAdvertising();
 }
 
-void initializeServerBLE(const char *deviceName, BLEServer *pServer)
+void initializeServerBLE(const char *deviceName, BLEServer *&pServer)
 {
-    // Serial.println("hi");
+    Serial.println("hi");
     BLEDevice::init(deviceName);
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new MyServerCallbacks());
-    // Serial.println("hi");
+    Serial.println("hi");
 }
 
-void initializeService(const char *serviceUUID, BLEService *pService, BLEServer *pServer)
+void initializeService(const char *serviceUUID, BLEService *&pService, BLEServer *&pServer)
 {
-    // Serial.println("service");
+    Serial.println("service");
     pService = pServer->createService(serviceUUID);
-    // Serial.println("service");
+    Serial.println("service");
 };
 
-void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *pCharacteristic, BLEService *pService)
+void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *&pCharacteristic, BLEService *&pService)
 {
-    // Serial.println("char");
+    Serial.println("char");
     pCharacteristic =
         pService->createCharacteristic(characteristicUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
     pCharacteristic->setCallbacks(new MyCallbacks());
     addDes;
     pService->start();
-    // Serial.println("char");
+    Serial.println("char");
 };
 
-void advertiseBLE(const char *serviceUUID, BLEAdvertising *pAdvertising)
+void advertiseBLE(const char *serviceUUID, BLEAdvertising *&pAdvertising)
 {
-    // Serial.println("advertise");
+    Serial.println("advertise");
     pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->addServiceUUID(serviceUUID);
     pAdvertising->setScanResponse(true);
     pAdvertising->setMinPreferred(0x06); // functions that help with iPhone connections issue
     pAdvertising->setMinPreferred(0x12);
     BLEDevice::startAdvertising();
-    // Serial.println("advertise");
+    Serial.println("advertise");
 };

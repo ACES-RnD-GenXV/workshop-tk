@@ -7,15 +7,10 @@
 #include <BLEServer.h>
 #include <BLE2902.h>
 
-extern BLEServer *defServer;
-extern BLEService *defService;
-extern BLECharacteristic *defCharacteristic;
-extern BLEAdvertising *defAdvertising;
-
-void initializeServerBLE(const char *deviceName, BLEServer *pServer = defServer);
-void initializeService(const char *serviceUUID, BLEService *pService = defService, BLEServer *pServer = defServer);
-void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *pCharacteristic = defCharacteristic, BLEService *pService = defService);
-void advertiseBLE(const char *serviceUUID, BLEAdvertising *pAdvertising = defAdvertising);
+void initializeServerBLE(const char *deviceName, BLEServer *&pServer);
+void initializeService(const char *serviceUUID, BLEService *&pService, BLEServer *&pServer);
+void initializeCharacteristic(const char *characteristicUUID, BLECharacteristic *&pCharacteristic, BLEService *&pService);
+void advertiseBLE(const char *serviceUUID, BLEAdvertising *&pAdvertising);
 
 class MyCallbacks : public BLECharacteristicCallbacks
 {

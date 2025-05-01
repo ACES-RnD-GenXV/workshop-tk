@@ -2,9 +2,6 @@
 #include "sensorLogic\sensorLogic.hpp"
 #include "configBLE.hpp"
 
-BLECharacteristic *pCharacteristicA;
-BLECharacteristic *pCharacteristicB;
-
 const int trigPin1 = 23; // Trigger pin for sensor 1
 const int echoPin1 = 22; // Echo pin for sensor 1
 const int trigPin2 = 19; // Trigger pin for sensor 2
@@ -45,11 +42,11 @@ void setup()
   pinMode(echoPin2, INPUT);
 
   // Initialize BLE
-  initializeServerBLE(NAME_OF_ESP_BLE);
-  initializeService(SERVICE_UUID);
-  initializeCharacteristic(CHAR_UUID_SENSOR_A, pCharacteristicA);
-  initializeCharacteristic(CHAR_UUID_SENSOR_B, pCharacteristicB);
-  advertiseBLE(SERVICE_UUID);
+  initializeServerBLE(NAME_OF_ESP_BLE, bleServer);
+  initializeService(SERVICE_UUID, bleService, bleServer);
+  initializeCharacteristic(CHAR_UUID_SENSOR_A, bleCharacteristicA, bleService);
+  initializeCharacteristic(CHAR_UUID_SENSOR_B, bleCharacteristicB, bleService);
+  advertiseBLE(SERVICE_UUID, bleAdvertising);
 
   // BLEDevice::init("ESP32_WS_Input"); // Name of the device
   // pServer = BLEDevice::createServer();
@@ -113,8 +110,8 @@ void loop()
   Serial.println(sensorValueB);
 
   // Send sensor values as strings (or binary if preferred)
-  sendRequestTo(pCharacteristicA, sensorValueA);
-  sendRequestTo(pCharacteristicB, sensorValueB);
+  sendRequestTo(bleCharacteristicA, sensorValueA);
+  sendRequestTo(bleCharacteristicB, sensorValueB);
   // pCharacteristicA->setValue(sensorValueA);
   // pCharacteristicA->notify();
 
