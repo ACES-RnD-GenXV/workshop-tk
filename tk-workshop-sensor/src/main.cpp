@@ -17,8 +17,8 @@ BLECharacteristic *pCharacteristicB;
 
 const int trigPin1 = 23; // Trigger pin for sensor 1
 const int echoPin1 = 22; // Echo pin for sensor 1
-const int trigPin2 = 19; // Trigger pin for sensor 2
-const int echoPin2 = 18; // Echo pin for sensor 2
+const int trigPin2 = 33; // Trigger pin for sensor 2
+const int echoPin2 = 32; // Echo pin for sensor 2
 // const int detectionThreshold = 15; // Distance threshold for HIGH state (in cm)
 
 // Function to read ultrasonic sensor and return true if object detected
