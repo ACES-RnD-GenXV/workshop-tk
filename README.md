@@ -40,6 +40,6 @@ Flash the program using PlatformIO or similar software.
 
 #### 📲 How to Use
 1. Power the device
-2. Scan the device through the website
+2. Scan the device through the website `https://workshop-tk.netlify.app`
 3. Pair with `ESP32_WS_Input`
 4. Output distance will be displayed via website dashboard updated every second
